@@ -7,7 +7,7 @@ using TicTacToe.Core.Models;
 namespace TicTacToe.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/game")]
 public class GameController(TicTacToeGame game) : ControllerBase
 {
     [HttpPost("new")]

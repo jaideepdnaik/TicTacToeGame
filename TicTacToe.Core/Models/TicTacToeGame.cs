@@ -17,7 +17,7 @@ public class TicTacToeGame
 
     public bool MakeMove(int position)
     {
-        if (_board[position] < 0 || _board[position] >= 9 || _board[position] != ' ')
+        if (_board[position] != ' ' || position < 0 || position >= 9)
         {
             return false;
         }

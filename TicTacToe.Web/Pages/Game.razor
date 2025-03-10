@@ -1,0 +1,62 @@
+@page "/game"
+@using TicTacToe.Web.Models
+@inject HttpClient Http
+
+<h3>TicTacToe</h3>
+
+<div class="board">
+    @for (var i = 0; i < 9; i++)
+    {
+        var pos = i;
+        <div class="cell" @onclick="() => MakeMove(pos)">
+            @_board[pos]
+        </div>
+    }
+</div>
+
+<p>Current Player : @_currentPlayer</p>
+@if (_winner != null)
+{
+    <p>@(_winner == "Draw" ? "Its a Draw!" : $"Winner : {_winner}")</p>
+}
+
+<button onclick="StartNewGame">New Game</button>
+
+@code {
+    private char[] _board = new char[9];
+    private char _currentPlayer = 'X';
+    private string? _winner = null;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadGameState();
+    }
+    
+    private async Task StartNewGame()
+    {
+        var response = await Http.PostAsync("api/game/new", null);
+        var state = await response.Content.ReadFromJsonAsync<GameState>();
+        UpdateState(state!);
+    }
+
+    private async Task MakeMove(int position)
+    {
+        var response = await Http.PostAsJsonAsync("api/game/makeMove", position);
+        var state = await response.Content.ReadFromJsonAsync<GameState>();
+        UpdateState(state!);
+    }
+    
+    private async Task LoadGameState()
+    {
+        var state = await Http.GetFromJsonAsync<GameState>("api/game/state");
+        UpdateState(state!);
+    }
+    
+    private void UpdateState(GameState state)
+    {
+        _board = state.Board;
+        _currentPlayer = state.CurrentPlayer;
+        _winner = state.Winner;
+        StateHasChanged();
+    }
+}

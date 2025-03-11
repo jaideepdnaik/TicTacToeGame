@@ -20,7 +20,7 @@
     <p>@(_winner == "Draw" ? "Its a Draw!" : $"Winner : {_winner}")</p>
 }
 
-<button onclick="StartNewGame">New Game</button>
+<button @onclick="StartNewGame">New Game</button>
 
 @code {
     private char[] _board = new char[9];
